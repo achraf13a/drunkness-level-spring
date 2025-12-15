@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Drunkness Level</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+
+<h1>Drunkness Level</h1>
+
+<div class="container">
+    <h2>Nueva medición</h2>
+
+    <form th:action="@{/mediciones}" th:object="${medicion}" method="post">
+        <label>Peso (kg)</label>
+        <input type="number" th:field="*{peso}" step="0.1" required/>
+
+        <label>Sexo</label>
+        <input type="text" th:field="*{sexo}" required/>
+
+        <label>Número de bebidas</label>
+        <input type="number" th:field="*{cantidadBebidas}" required/>
+
+        <button type="submit">Calcular nivel</button>
+    </form>
+</div>
+
+<div class="container">
+    <h2>Historial de mediciones</h2>
+
+    <table>
+        <tr>
+            <th>Peso</th>
+            <th>Sexo</th>
+            <th>Bebidas</th>
+            <th>Nivel alcohol</th>
+            <th></th>
+        </tr>
+        <tr th:each="m : ${mediciones}">
+            <td th:text="${m.peso}"></td>
+            <td th:text="${m.sexo}"></td>
+            <td th:text="${m.cantidadBebidas}"></td>
+            <td th:text="${m.nivelAlcohol}"></td>
+            <td>
+                <a th:href="@{/mediciones/eliminar/{id}(id=${m.id})}">
+                    Eliminar
+                </a>
+            </td>
+        </tr>
+    </table>
+</div>
+
+</body>
+</html>
