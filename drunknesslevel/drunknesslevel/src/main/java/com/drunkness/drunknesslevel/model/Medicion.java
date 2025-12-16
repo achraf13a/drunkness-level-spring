@@ -1,6 +1,8 @@
 package com.drunkness.drunknesslevel.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -13,23 +15,34 @@ public class Medicion {
     private Long id;
 
     private double peso;
-    private String sexo;
+
+    @Enumerated(EnumType.STRING)
+    private Sexo sexo;
+
     private int cantidadBebidas;
+
+    private double horasTranscurridas;
+
     private double nivelAlcohol;
 
+    // GETTERS Y SETTERS
 
     public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
 
     public double getPeso() { return peso; }
     public void setPeso(double peso) { this.peso = peso; }
 
-    public String getSexo() { return sexo; }
-    public void setSexo(String sexo) { this.sexo = sexo; }
+    public Sexo getSexo() { return sexo; }
+    public void setSexo(Sexo sexo) { this.sexo = sexo; }
 
     public int getCantidadBebidas() { return cantidadBebidas; }
     public void setCantidadBebidas(int cantidadBebidas) {
         this.cantidadBebidas = cantidadBebidas;
+    }
+
+    public double getHorasTranscurridas() { return horasTranscurridas; }
+    public void setHorasTranscurridas(double horasTranscurridas) {
+        this.horasTranscurridas = horasTranscurridas;
     }
 
     public double getNivelAlcohol() { return nivelAlcohol; }
