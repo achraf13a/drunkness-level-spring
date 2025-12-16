@@ -25,6 +25,27 @@
     </form>
 </div>
 
+<div class="modal" th:if="${mostrarModal}">
+    <div class="modal-content">
+        <h3>ATENÇÃO</h3>
+        <p>
+            Por solo DOS BESITOS donde tú quieras, evitas estos anuncios molestos y graciosos. Pero si encima
+            quieres la versión OSITO AMOROSO, donde podrás añadir un vídeo para los ratones que no pagan, solo por UN ABRAZO 
+            EXTRA es tuyo!
+        </p>
+        <video width="100%" controls autoplay th:if="${video != null}">
+            <source th:src="${video}" type="video/mp4">
+            Tu navegador no soporta vídeo.
+        </video>
+
+        <p th:if="${video == null}">
+            No hay vídeos disponibles, bien hecho por pagar o hackearlo.
+        </p>
+
+        <a th:href="@{/mediciones}" class="close-btn">Cerrar</a>
+    </div>
+</div>
+
 <div class="container">
     <h2>Historial de mediciones</h2>
 
