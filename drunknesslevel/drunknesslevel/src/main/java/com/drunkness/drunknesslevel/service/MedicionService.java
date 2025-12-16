@@ -1,10 +1,10 @@
 package com.drunkness.drunknesslevel.service;
-
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
 import com.drunkness.drunknesslevel.model.Medicion;
+import com.drunkness.drunknesslevel.model.Sexo;
 import com.drunkness.drunknesslevel.repository.MedicionRepository;
 
 @Service
@@ -21,11 +21,23 @@ public class MedicionService {
     }
 
     public Medicion save(Medicion medicion) {
-        // cálculo simple del nivel de alcohol
-        double nivel = medicion.getCantidadBebidas() * 0.3;
-        medicion.setNivelAlcohol(nivel);
-        return repository.save(medicion);
+
+    double gramosAlcohol = medicion.getCantidadBebidas() * 10.0;
+
+    double r = medicion.getSexo() == Sexo.HOMBRE ? 0.68 : 0.55;
+
+    double bac = (gramosAlcohol / (medicion.getPeso() * r))
+            - (0.15 * medicion.getHorasTranscurridas());
+
+    if (bac < 0) {
+        bac = 0;
     }
+
+    medicion.setNivelAlcohol(Math.round(bac * 1000.0) / 1000.0);
+
+    return repository.save(medicion);
+}
+
 
     public void delete(Long id) {
         repository.deleteById(id);

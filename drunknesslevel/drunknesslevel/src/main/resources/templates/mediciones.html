@@ -6,24 +6,46 @@
 </head>
 <body>
 
-<h1>Drunkness Level</h1>
+<div class="app">
 
-<div class="container">
-    <h2>Nueva medición</h2>
+    <h1>Drunkness Level</h1>
+    <p class="subtitle">¿Qué tan doblado/a vas?</p>
 
-    <form th:action="@{/mediciones}" th:object="${medicion}" method="post">
-        <label>Peso (kg)</label>
-        <input type="number" th:field="*{peso}" step="0.1" required/>
+    <div class="form-card">
+        <form th:action="@{/mediciones}" th:object="${medicion}" method="post">
 
-        <label>Sexo</label>
-        <input type="text" th:field="*{sexo}" required/>
+            <div class="form-grid">
 
-        <label>Número de bebidas</label>
-        <input type="number" th:field="*{cantidadBebidas}" required/>
+                <div class="form-group">
+                    <label>Peso (kg)</label>
+                    <input type="number" step="0.1" th:field="*{peso}" required>
+                </div>
 
-        <button type="submit">Calcular nivel</button>
-    </form>
-</div>
+                <div class="form-group">
+                    <label>Sexo</label>
+                    <select th:field="*{sexo}" required>
+                        <option value="">Selecciona</option>
+                        <option th:value="HOMBRE">Hombre</option>
+                        <option th:value="MUJER">Mujer</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Número de bebidas</label>
+                    <input type="number" th:field="*{cantidadBebidas}" required>
+                </div>
+
+                <div class="form-group">
+                    <label>¿Cuántas horas lleva tu hígado en Alcohólicos Anónimos?</label>
+                    <input type="number" step="0.1" th:field="*{horasTranscurridas}" required>
+                </div>
+
+            </div>
+
+            <button type="submit">Calcular nivel de alcohol</button>
+
+        </form>
+    </div>
 
 <div class="modal" th:if="${mostrarModal}">
     <div class="modal-content">
@@ -46,29 +68,40 @@
     </div>
 </div>
 
-<div class="container">
-    <h2>Historial de mediciones</h2>
+    <div class="table-card">
+        <table>
+            <tr>
+                <th>Peso</th>
+                <th>Sexo</th>
+                <th>Bebidas</th>
+                <th>Horas</th>
+                <th>Alcohol</th>
+                <th></th>
+            </tr>
 
-    <table>
-        <tr>
-            <th>Peso</th>
-            <th>Sexo</th>
-            <th>Bebidas</th>
-            <th>Nivel alcohol</th>
-            <th></th>
-        </tr>
-        <tr th:each="m : ${mediciones}">
-            <td th:text="${m.peso}"></td>
-            <td th:text="${m.sexo}"></td>
-            <td th:text="${m.cantidadBebidas}"></td>
-            <td th:text="${m.nivelAlcohol}"></td>
-            <td>
-                <a th:href="@{/mediciones/eliminar/{id}(id=${m.id})}">
-                    Eliminar
-                </a>
-            </td>
-        </tr>
-    </table>
+            <tr th:each="m : ${mediciones}">
+                <td th:text="${m.peso}"></td>
+                <td th:text="${m.sexo}"></td>
+                <td th:text="${m.cantidadBebidas}"></td>
+                <td th:text="${m.horasTranscurridas}"></td>
+
+                <td>
+                    <span th:text="${m.nivelAlcohol}"></span><br>
+                    <span th:class="${m.nivelAlcohol < 0.3 ? 'good' : 'bad'}"
+                          th:text="${m.nivelAlcohol < 0.3 ? 'Apto para conducir' : 'NO apto'}">
+                    </span>
+                </td>
+
+                <td>
+                    <a class="delete"
+                       th:href="@{/mediciones/eliminar/{id}(id=${m.id})}">
+                        Eliminar.
+                    </a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
 </div>
 
 </body>
