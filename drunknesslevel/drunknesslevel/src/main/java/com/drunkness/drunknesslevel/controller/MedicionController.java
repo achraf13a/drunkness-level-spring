@@ -45,7 +45,11 @@ public class MedicionController {
         "/videos/anuncio6.mp4",
         "/videos/anuncio7.mp4",
         "/videos/anuncio8.mp4",
-        "/videos/anuncio9.mp4"
+        "/videos/anuncio9.mp4",
+        "/videos/anuncio10.mp4",
+        "/videos/anuncio11.mp4",
+        "/videos/anuncio12.mp4",
+        "/videos/anuncio13.mp4"
         );
 
         Random random = new Random();
