@@ -1,0 +1,156 @@
+package com.drunkness.drunknesslevel.service;
+
+import com.drunkness.drunknesslevel.entity.Medicion;
+import com.drunkness.drunknesslevel.repository.MedicionRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
+@DisplayName("MedicionService Tests")
+class MedicionServiceTest {
+
+    @Mock
+    private MedicionRepository medicionRepository;
+
+    @InjectMocks
+    private MedicionService medicionService;
+
+    private Medicion medicion;
+
+    @BeforeEach
+    void setUp() {
+        medicion = new Medicion();
+        medicion.setId(1L);
+        medicion.setValor(0.05);
+        medicion.setFecha(LocalDateTime.now());
+    }
+
+    @Test
+    @DisplayName("Should save medicion successfully")
+    void testGuardarMedicion() {
+        // Arrange
+        when(medicionRepository.save(any(Medicion.class))).thenReturn(medicion);
+
+        // Act
+        Medicion resultado = medicionService.guardar(medicion);
+
+        // Assert
+        assertNotNull(resultado);
+        assertEquals(1L, resultado.getId());
+        assertEquals(0.05, resultado.getValor());
+        verify(medicionRepository, times(1)).save(medicion);
+    }
+
+    @Test
+    @DisplayName("Should find medicion by id successfully")
+    void testObtenerMedicionPorId() {
+        // Arrange
+        when(medicionRepository.findById(1L)).thenReturn(Optional.of(medicion));
+
+        // Act
+        Optional<Medicion> resultado = medicionService.obtenerPorId(1L);
+
+        // Assert
+        assertTrue(resultado.isPresent());
+        assertEquals(1L, resultado.get().getId());
+        verify(medicionRepository, times(1)).findById(1L);
+    }
+
+    @Test
+    @DisplayName("Should return empty optional when medicion not found")
+    void testObtenerMedicionPorIdNoEncontrada() {
+        // Arrange
+        when(medicionRepository.findById(999L)).thenReturn(Optional.empty());
+
+        // Act
+        Optional<Medicion> resultado = medicionService.obtenerPorId(999L);
+
+        // Assert
+        assertFalse(resultado.isPresent());
+        verify(medicionRepository, times(1)).findById(999L);
+    }
+
+    @Test
+    @DisplayName("Should get all mediciones successfully")
+    void testObtenerTodasLasMediciones() {
+        // Arrange
+        Medicion medicion2 = new Medicion();
+        medicion2.setId(2L);
+        medicion2.setValor(0.08);
+        List<Medicion> mediciones = Arrays.asList(medicion, medicion2);
+        when(medicionRepository.findAll()).thenReturn(mediciones);
+
+        // Act
+        List<Medicion> resultado = medicionService.obtenerTodas();
+
+        // Assert
+        assertEquals(2, resultado.size());
+        verify(medicionRepository, times(1)).findAll();
+    }
+
+    @Test
+    @DisplayName("Should return empty list when no mediciones exist")
+    void testObtenerTodasLasMedicionesVacio() {
+        // Arrange
+        when(medicionRepository.findAll()).thenReturn(Arrays.asList());
+
+        // Act
+        List<Medicion> resultado = medicionService.obtenerTodas();
+
+        // Assert
+        assertTrue(resultado.isEmpty());
+        verify(medicionRepository, times(1)).findAll();
+    }
+
+    @Test
+    @DisplayName("Should delete medicion successfully")
+    void testEliminarMedicion() {
+        // Arrange
+        doNothing().when(medicionRepository).deleteById(1L);
+
+        // Act
+        medicionService.eliminar(1L);
+
+        // Assert
+        verify(medicionRepository, times(1)).deleteById(1L);
+    }
+
+    @Test
+    @DisplayName("Should update medicion successfully")
+    void testActualizarMedicion() {
+        // Arrange
+        medicion.setValor(0.10);
+        when(medicionRepository.save(any(Medicion.class))).thenReturn(medicion);
+
+        // Act
+        Medicion resultado = medicionService.guardar(medicion);
+
+        // Assert
+        assertEquals(0.10, resultado.getValor());
+        verify(medicionRepository, times(1)).save(medicion);
+    }
+
+    @Test
+    @DisplayName("Should handle null medicion")
+    void testGuardarMedicionNula() {
+        // Arrange
+        when(medicionRepository.save(null)).thenThrow(new IllegalArgumentException());
+
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class, () -> medicionService.guardar(null));
+    }
+}
