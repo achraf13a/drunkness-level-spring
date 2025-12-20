@@ -45,7 +45,6 @@ class MedicionServiceTest {
     @DisplayName("Debe guardar medicion exitosamente")
     void testGuardarMedicion() {
         when(medicionRepository.save(any(Medicion.class))).thenReturn(medicion);
-
         Medicion resultado = medicionService.save(medicion);
 
         assertNotNull(resultado);

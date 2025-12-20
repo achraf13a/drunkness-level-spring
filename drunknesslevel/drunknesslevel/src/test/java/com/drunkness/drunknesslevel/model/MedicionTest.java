@@ -89,7 +89,6 @@ class MedicionTest {
     @DisplayName("Debe manejar cantidad de bebidas en cero")
     void testZeroCantidadBebidas() {
         Medicion medicion = new Medicion();
-        
         medicion.setCantidadBebidas(0);
         
         assertEquals(0, medicion.getCantidadBebidas());
