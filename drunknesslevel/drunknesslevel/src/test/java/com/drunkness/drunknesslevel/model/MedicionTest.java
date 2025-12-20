@@ -9,12 +9,10 @@ import static org.junit.jupiter.api.Assertions.*;
 class MedicionTest {
 
     @Test
-    @DisplayName("should create medicion with default values")
+    @DisplayName("Debe crear medicion con valores por defecto")
     void testMedicionCreation() {
-        // Arrange & Act
         Medicion medicion = new Medicion();
         
-        // Assert
         assertNull(medicion.getId());
         assertEquals(0.0, medicion.getPeso());
         assertNull(medicion.getSexo());
@@ -24,107 +22,84 @@ class MedicionTest {
     }
 
     @Test
-    @DisplayName("should set and get peso correctly")
+    @DisplayName("Debe establecer y obtener peso correctamente")
     void testSetGetPeso() {
-        // Arrange
         Medicion medicion = new Medicion();
         double expectedPeso = 75.5;
         
-        // Act
         medicion.setPeso(expectedPeso);
         
-        // Assert
         assertEquals(expectedPeso, medicion.getPeso());
     }
 
     @Test
-    @DisplayName("should set and get sexo correctly")
+    @DisplayName("Debe establecer y obtener sexo correctamente")
     void testSetGetSexo() {
-        // Arrange
         Medicion medicion = new Medicion();
         
-        // Act
         medicion.setSexo(Sexo.HOMBRE);
         
-        // Assert
         assertEquals(Sexo.HOMBRE, medicion.getSexo());
     }
 
     @Test
-    @DisplayName("should set and get cantidadBebidas correctly")
+    @DisplayName("Debe establecer y obtener cantidadBebidas correctamente")
     void testSetGetCantidadBebidas() {
-        // Arrange
         Medicion medicion = new Medicion();
         int expectedCantidad = 5;
         
-        // Act
         medicion.setCantidadBebidas(expectedCantidad);
         
-        // Assert
         assertEquals(expectedCantidad, medicion.getCantidadBebidas());
     }
 
     @Test
-    @DisplayName("should set and get horasTranscurridas correctly")
+    @DisplayName("Debe establecer y obtener horasTranscurridas correctamente")
     void testSetGetHorasTranscurridas() {
-        // Arrange
         Medicion medicion = new Medicion();
         double expectedHoras = 3.5;
         
-        // Act
         medicion.setHorasTranscurridas(expectedHoras);
         
-        // Assert
         assertEquals(expectedHoras, medicion.getHorasTranscurridas());
     }
 
     @Test
-    @DisplayName("should set and get nivelAlcohol correctly")
+    @DisplayName("Debe establecer y obtener nivelAlcohol correctamente")
     void testSetGetNivelAlcohol() {
-        // Arrange
         Medicion medicion = new Medicion();
         double expectedNivel = 0.08;
         
-        // Act
         medicion.setNivelAlcohol(expectedNivel);
         
-        // Assert
         assertEquals(expectedNivel, medicion.getNivelAlcohol());
     }
 
     @Test
-    @DisplayName("should handle negative peso values")
+    @DisplayName("Debe manejar valores de peso negativos")
     void testNegativePeso() {
-        // Arrange
         Medicion medicion = new Medicion();
         
-        // Act
         medicion.setPeso(-50.0);
         
-        // Assert
         assertEquals(-50.0, medicion.getPeso());
     }
 
     @Test
-    @DisplayName("should handle zero cantidadBebidas")
+    @DisplayName("Debe manejar cantidad de bebidas en cero")
     void testZeroCantidadBebidas() {
-        // Arrange
         Medicion medicion = new Medicion();
         
-        // Act
         medicion.setCantidadBebidas(0);
         
-        // Assert
         assertEquals(0, medicion.getCantidadBebidas());
     }
 
     @Test
-    @DisplayName("should return null id before persistence")
+    @DisplayName("Debe retornar null id antes de persistencia")
     void testGetIdBeforePersistence() {
-        // Arrange
         Medicion medicion = new Medicion();
         
-        // Assert
         assertNull(medicion.getId());
     }
 }

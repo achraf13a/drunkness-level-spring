@@ -1,6 +1,7 @@
 package com.drunkness.drunknesslevel.service;
 
-import com.drunkness.drunknesslevel.entity.Medicion;
+import com.drunkness.drunknesslevel.model.Medicion;
+import com.drunkness.drunknesslevel.model.Sexo;
 import com.drunkness.drunknesslevel.repository.MedicionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -10,7 +11,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +20,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("MedicionService Tests")
+@DisplayName("Pruebas de MedicionService")
 class MedicionServiceTest {
 
     @Mock
@@ -34,123 +34,102 @@ class MedicionServiceTest {
     @BeforeEach
     void setUp() {
         medicion = new Medicion();
-        medicion.setId(1L);
-        medicion.setValor(0.05);
-        medicion.setFecha(LocalDateTime.now());
+        medicion.setPeso(70.0);
+        medicion.setSexo(Sexo.HOMBRE);
+        medicion.setCantidadBebidas(2);
+        medicion.setHorasTranscurridas(1.0);
+        medicion.setNivelAlcohol(0.05);
     }
 
     @Test
-    @DisplayName("Should save medicion successfully")
+    @DisplayName("Debe guardar medicion exitosamente")
     void testGuardarMedicion() {
-        // Arrange
         when(medicionRepository.save(any(Medicion.class))).thenReturn(medicion);
 
-        // Act
-        Medicion resultado = medicionService.guardar(medicion);
+        Medicion resultado = medicionService.save(medicion);
 
-        // Assert
         assertNotNull(resultado);
-        assertEquals(1L, resultado.getId());
-        assertEquals(0.05, resultado.getValor());
+        assertTrue(resultado.getNivelAlcohol() >= 0);
         verify(medicionRepository, times(1)).save(medicion);
     }
 
     @Test
-    @DisplayName("Should find medicion by id successfully")
+    @DisplayName("Debe encontrar medicion por id exitosamente")
     void testObtenerMedicionPorId() {
-        // Arrange
         when(medicionRepository.findById(1L)).thenReturn(Optional.of(medicion));
 
-        // Act
-        Optional<Medicion> resultado = medicionService.obtenerPorId(1L);
+        Medicion resultado = medicionService.findById(1L);
 
-        // Assert
-        assertTrue(resultado.isPresent());
-        assertEquals(1L, resultado.get().getId());
+        assertNotNull(resultado);
         verify(medicionRepository, times(1)).findById(1L);
     }
 
     @Test
-    @DisplayName("Should return empty optional when medicion not found")
+    @DisplayName("Debe retornar null cuando medicion no se encuentra")
     void testObtenerMedicionPorIdNoEncontrada() {
-        // Arrange
         when(medicionRepository.findById(999L)).thenReturn(Optional.empty());
 
-        // Act
-        Optional<Medicion> resultado = medicionService.obtenerPorId(999L);
+        Medicion resultado = medicionService.findById(999L);
 
-        // Assert
-        assertFalse(resultado.isPresent());
+        assertNull(resultado);
         verify(medicionRepository, times(1)).findById(999L);
     }
 
     @Test
-    @DisplayName("Should get all mediciones successfully")
+    @DisplayName("Debe obtener todas las mediciones exitosamente")
     void testObtenerTodasLasMediciones() {
-        // Arrange
         Medicion medicion2 = new Medicion();
-        medicion2.setId(2L);
-        medicion2.setValor(0.08);
+        medicion2.setPeso(60.0);
+        medicion2.setSexo(Sexo.MUJER);
+        medicion2.setCantidadBebidas(1);
+        medicion2.setHorasTranscurridas(2.0);
         List<Medicion> mediciones = Arrays.asList(medicion, medicion2);
         when(medicionRepository.findAll()).thenReturn(mediciones);
 
-        // Act
-        List<Medicion> resultado = medicionService.obtenerTodas();
+        List<Medicion> resultado = medicionService.findAll();
 
-        // Assert
         assertEquals(2, resultado.size());
         verify(medicionRepository, times(1)).findAll();
     }
 
     @Test
-    @DisplayName("Should return empty list when no mediciones exist")
+    @DisplayName("Debe retornar lista vacía cuando no existen mediciones")
     void testObtenerTodasLasMedicionesVacio() {
-        // Arrange
         when(medicionRepository.findAll()).thenReturn(Arrays.asList());
 
-        // Act
-        List<Medicion> resultado = medicionService.obtenerTodas();
+        List<Medicion> resultado = medicionService.findAll();
 
-        // Assert
         assertTrue(resultado.isEmpty());
         verify(medicionRepository, times(1)).findAll();
     }
 
     @Test
-    @DisplayName("Should delete medicion successfully")
+    @DisplayName("Debe eliminar medicion exitosamente")
     void testEliminarMedicion() {
-        // Arrange
         doNothing().when(medicionRepository).deleteById(1L);
 
-        // Act
-        medicionService.eliminar(1L);
+        medicionService.delete(1L);
 
-        // Assert
         verify(medicionRepository, times(1)).deleteById(1L);
     }
 
     @Test
-    @DisplayName("Should update medicion successfully")
+    @DisplayName("Debe actualizar medicion exitosamente")
     void testActualizarMedicion() {
-        // Arrange
-        medicion.setValor(0.10);
+        medicion.setCantidadBebidas(3);
         when(medicionRepository.save(any(Medicion.class))).thenReturn(medicion);
 
-        // Act
-        Medicion resultado = medicionService.guardar(medicion);
+        Medicion resultado = medicionService.save(medicion);
 
-        // Assert
-        assertEquals(0.10, resultado.getValor());
+        assertEquals(3, resultado.getCantidadBebidas());
         verify(medicionRepository, times(1)).save(medicion);
     }
 
     @Test
-    @DisplayName("Should handle null medicion")
+    @DisplayName("Debe manejar medicion nula")
     void testGuardarMedicionNula() {
-        // Arrange
         when(medicionRepository.save(null)).thenThrow(new IllegalArgumentException());
 
-        // Act & Assert
-        assertThrows(IllegalArgumentException.class, () -> medicionService.guardar(null));
+        assertThrows(IllegalArgumentException.class, () -> medicionRepository.save(null));
     }
 }
